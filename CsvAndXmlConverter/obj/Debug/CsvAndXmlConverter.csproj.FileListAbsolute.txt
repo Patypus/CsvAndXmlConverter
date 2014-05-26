@@ -1,1 +1,7 @@
 D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\bin\Debug\CsvAndXmlConverter.exe.config
+D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\bin\Debug\CsvAndXmlConverter.exe
+D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\bin\Debug\CsvAndXmlConverter.pdb
+D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.Properties.Resources.resources
+D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.csproj.GenerateResource.Cache
+D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.exe
+D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.pdb
