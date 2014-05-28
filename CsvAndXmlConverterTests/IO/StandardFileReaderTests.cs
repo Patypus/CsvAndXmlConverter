@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,17 +38,19 @@ namespace CsvAndXmlConverterTests.IO
          * still satisfy these tests.
          */
         [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void TestIncorrectFileNameThrowsExpectedException()
         {
-            //TODO - finish
-            Assert.IsFalse(true);
+            var path = @"../../IO/Data/NotReallyAfile.txt";
+            reader.ReadDataFromFile(path);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(DirectoryNotFoundException))]
         public void TestInvalidPathThrowsExpectedException()
         {
-            //TODO - finish
-            Assert.IsFalse(true);
+            var path = @"../../NotADirectory/something.txt";
+            reader.ReadDataFromFile(path);
         }
     }
 }

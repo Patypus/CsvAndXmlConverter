@@ -45,6 +45,8 @@
     <Compile Include="Converters\IConverter.cs" />
     <Compile Include="Converters\XmlToCsvConverter.cs" />
     <Compile Include="CsvAndXmlConverter.cs" />
+    <Compile Include="IO\FileWriter.cs" />
+    <Compile Include="IO\IFileWriter.cs" />
     <Compile Include="IO\StandardFileReader.cs" />
     <Compile Include="IO\IStandardFileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
