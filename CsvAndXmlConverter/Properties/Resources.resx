@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileCreated" xml:space="preserve">
+    <value>Converted file created at {0}</value>
+  </data>
+  <data name="UnableToSaveFilePermissionDenied" xml:space="preserve">
+    <value>Unable to save to directory path {0} as permission has been denied</value>
+  </data>
+  <data name="UnableToSaveToNoExistantDirectory" xml:space="preserve">
+    <value>Unable to save as the dirctory path {0} does not exist.</value>
+  </data>
   <data name="UsageMessage" xml:space="preserve">
     <value>This program is invoked with a single argument: a path to an existing file to change its data's format. Specify a csv file to convert it to xml or specify an xml file to convert it to a csv format. The converted file will be placed at the same location as the file specified with the same name but a different extension.</value>
   </data>

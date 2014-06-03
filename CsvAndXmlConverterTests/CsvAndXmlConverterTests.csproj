@@ -63,6 +63,9 @@
   <ItemGroup>
     <Content Include="IO\Data\TestTextFile.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IO\WriteTarget\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvAndXmlConverter.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,27 @@ namespace CsvAndXmlConverter.IO
     {
         public string SaveDataToFile(MemoryStream data, string filePath)
         {
-            return string.Empty;
+            try
+            {
+                return PerformSave(data, filePath);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return string.Format(Resources.UnableToSaveToNoExistantDirectory, Path.GetDirectoryName(filePath));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return string.Format(Resources.UnableToSaveFilePermissionDenied, Path.GetDirectoryName(filePath));
+            }
+        }
+
+        private string PerformSave(MemoryStream data, string filePath)
+        {
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                data.WriteTo(fileStream);
+            }
+            return string.Format(Resources.FileCreated, filePath);
         }
     }
 }

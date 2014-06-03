@@ -61,6 +61,33 @@ namespace CsvAndXmlConverter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Converted file created at {0}.
+        /// </summary>
+        internal static string FileCreated {
+            get {
+                return ResourceManager.GetString("FileCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to save to directory path {0} as permission has been denied.
+        /// </summary>
+        internal static string UnableToSaveFilePermissionDenied {
+            get {
+                return ResourceManager.GetString("UnableToSaveFilePermissionDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to save as the dirctory path {0} does not exist..
+        /// </summary>
+        internal static string UnableToSaveToNoExistantDirectory {
+            get {
+                return ResourceManager.GetString("UnableToSaveToNoExistantDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This program is invoked with a single argument: a path to an existing file to change its data&apos;s format. Specify a csv file to convert it to xml or specify an xml file to convert it to a csv format. The converted file will be placed at the same location as the file specified with the same name but a different extension..
         /// </summary>
         internal static string UsageMessage {
