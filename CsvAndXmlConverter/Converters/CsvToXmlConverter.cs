@@ -10,6 +10,13 @@ namespace CsvAndXmlConverter.Converters
     public class CsvToXmlConverter : IConverter
     {
         private readonly IStandardFileReader _fileReader;
+        private readonly IFileWriter _fileWriter;
+
+        public CsvToXmlConverter(IStandardFileReader reader, IFileWriter writer)
+        {
+            _fileReader = reader;
+            _fileWriter = writer;
+        }
 
         public void ConvertFile(string path)
         {
