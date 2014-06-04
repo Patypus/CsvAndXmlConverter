@@ -35,13 +35,25 @@ namespace CsvAndXmlConverterTests.IO
         [TestMethod]
         public void TestWritingDataFromStreamForCsv()
         {
-            Assert.IsFalse(true);
+            var csvData = "col1,col2,col3" + Environment.NewLine + "red,yellow,blue";
+            var filePath = @"..\..\IO\WriteTarget\CsvTest.csv";
+            writer.SaveDataToFile(CreateStreamForDataString(csvData), filePath);
+            var dataStrngFromFile = File.ReadAllText(filePath);
+            File.Delete(filePath);
+            Assert.AreEqual(csvData, dataStrngFromFile);
         }
 
         [TestMethod]
         public void TestWritingDataFromStreamForXml()
         {
-            Assert.IsFalse(true);
+            var xmlData = "<Items>" + Environment.NewLine +
+                            "   <Name>George</Name>" + Environment.NewLine + 
+                            "</Items>";
+            var filePath = @"..\..\IO\WriteTarget\XmlTest.xml";
+            writer.SaveDataToFile(CreateStreamForDataString(xmlData), filePath);
+            var dataStrngFromFile = File.ReadAllText(filePath);
+            File.Delete(filePath);
+            Assert.AreEqual(xmlData, dataStrngFromFile);
         }
 
         [TestMethod]
