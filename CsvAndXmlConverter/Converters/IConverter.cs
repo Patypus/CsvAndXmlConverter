@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvAndXmlConverter.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CsvAndXmlConverter.Converters
 {
     public interface IConverter
     {
-        void ConvertFile(string path);
+        IConversionResult ConvertFile(string path);
     }
 }

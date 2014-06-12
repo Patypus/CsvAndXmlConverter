@@ -1,4 +1,6 @@
-﻿using CsvAndXmlConverter.IO;
+﻿using CsvAndXmlConverter.Data;
+using CsvAndXmlConverter.IO;
+using CsvAndXmlConverter.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,11 +21,40 @@ namespace CsvAndXmlConverter.Converters
             _fileWriter = writer;
         }
 
-        public void ConvertFile(string path)
+        public IConversionResult ConvertFile(string path)
         {
-            var fileData = RetrieveDataFromFile(path);
+            IEnumerable<string> fileData;
+            try 
+            {
+                fileData = RetrieveDataFromFile(path);
+            }
+            catch (Exception exception)
+            {
+                return HandleExceptionFromReadingFile(exception, path);
+            }
+            
             var convertedFilePath = CreatePathForConvertedFile(path);
             WriteDataToFile(fileData.ToString(), convertedFilePath);
+            return null;
+        }
+
+        private IConversionResult HandleExceptionFromReadingFile(Exception exception, string path)
+        {
+            if(exception.GetType() == typeof(FileNotFoundException))
+            {
+                var message = string.Format(Resources.FileNotFoundMessage, path);
+                return new ConversionResult { Result = false, ResultMessage = message };
+            }
+            else if (exception.GetType() == typeof(DirectoryNotFoundException))
+            {
+                var message = string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(path));
+                return new ConversionResult { Result = false, ResultMessage = message };
+            }
+            else
+            {
+                var message = string.Format(Resources.GenericUnableToOpenFile, exception.Message);
+                return new ConversionResult { Result = false, ResultMessage = message };
+            }
         }
 
         private IEnumerable<string> RetrieveDataFromFile(string path)

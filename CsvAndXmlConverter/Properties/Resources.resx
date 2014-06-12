@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DirectoryNotFoundMessage" xml:space="preserve">
+    <value>Unable to find direcotry in the path '{0}'</value>
+  </data>
   <data name="FileCreated" xml:space="preserve">
     <value>Converted file created at {0}</value>
+  </data>
+  <data name="FileNotFoundMessage" xml:space="preserve">
+    <value>Unable to find file '{0}'</value>
+  </data>
+  <data name="GenericUnableToOpenFile" xml:space="preserve">
+    <value>Unable to open file: {0}</value>
   </data>
   <data name="UnableToSaveFilePermissionDenied" xml:space="preserve">
     <value>Unable to save to directory path {0} as permission has been denied</value>

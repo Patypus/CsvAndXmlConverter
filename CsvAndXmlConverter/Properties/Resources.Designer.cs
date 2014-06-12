@@ -61,11 +61,38 @@ namespace CsvAndXmlConverter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to find direcotry in the path &apos;{0}&apos;.
+        /// </summary>
+        internal static string DirectoryNotFoundMessage {
+            get {
+                return ResourceManager.GetString("DirectoryNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converted file created at {0}.
         /// </summary>
         internal static string FileCreated {
             get {
                 return ResourceManager.GetString("FileCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find file &apos;{0}&apos;.
+        /// </summary>
+        internal static string FileNotFoundMessage {
+            get {
+                return ResourceManager.GetString("FileNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to open file: {0}.
+        /// </summary>
+        internal static string GenericUnableToOpenFile {
+            get {
+                return ResourceManager.GetString("GenericUnableToOpenFile", resourceCulture);
             }
         }
         
