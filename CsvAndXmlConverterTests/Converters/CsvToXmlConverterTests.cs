@@ -39,7 +39,22 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestRootElementIsBasedOnFileName()
         {
-            Assert.IsTrue(false);
+            var expectedName = "change";
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestStreamContentForStartingAndClosingTags(memoryStream, expectedName));
+            var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
+            var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
+            converter.ConvertFile(@"C:\Somewhere\" + expectedName + ".csv");
+        }
+
+        private void TestStreamContentForStartingAndClosingTags(MemoryStream stream, string expectedName)
+        {
+            var reader = new StreamReader(stream);
+            var content = reader.ReadToEnd().Split('\r');
+            Assert.IsTrue(content.First().Contains("<" + expectedName + "s>"));
+            Assert.IsTrue(content.Last().Contains("</" + expectedName + "s>"));
         }
 
         [TestMethod]
