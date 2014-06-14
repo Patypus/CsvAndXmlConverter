@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CsvAndXmlConverter.Converters
 {
@@ -34,7 +35,7 @@ namespace CsvAndXmlConverter.Converters
             }
             
             var convertedFilePath = CreatePathForConvertedFile(path);
-            WriteDataToFile(fileData.ToString(), convertedFilePath);
+            WriteDataToFile(convertDataContent(fileData, Path.GetFileNameWithoutExtension(path)), convertedFilePath);
             return null;
         }
 
@@ -83,6 +84,15 @@ namespace CsvAndXmlConverter.Converters
             dataWriter.Flush();
             dataStream.Position = 0;
             return dataStream;
+        }
+
+        private string convertDataContent(IEnumerable<string> fileData, string baseName)
+        {
+            var document = new XDocument();
+            var root = new XElement(baseName + "s");
+            root.Add(new XElement("child"));
+            document.Add(root);
+            return document.ToString();
         }
     }
 }
