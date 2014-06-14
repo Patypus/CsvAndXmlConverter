@@ -79,9 +79,9 @@ namespace CsvAndXmlConverterTests.Converters
         }
 
         [TestMethod]
-        public void TestContentOfConvertedFileIsCorrect()
-        { 
-            Assert.IsTrue(false); 
+        public void TestEachRowIsRepresentedAsASeparateElement()
+        {
+            Assert.IsTrue(false);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace CsvAndXmlConverterTests.Converters
         }
 
         [TestMethod]
-        public void TestEachRowIsRepresentedAsASeparateElement()
+        public void TestContentOfConvertedFileIsCorrect()
         {
             Assert.IsTrue(false);
         }
@@ -111,7 +111,12 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestOutputMessageFromFileWriterIsPassedUpThoughConverterToCallerInResult()
         {
-            Assert.IsTrue(false);
+            var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>())).Returns("I am an error message");
+            var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
+            var result = converter.ConvertFile(@"C:\Somehere\aFile\mightbe.csv");
+            Assert.AreEqual("I am an error message", result.ResultMessage);
         }
 
         [TestMethod]
