@@ -90,7 +90,14 @@ namespace CsvAndXmlConverter.Converters
         {
             var document = new XDocument();
             var root = new XElement(baseName + "s");
-            root.Add(new XElement("child"));
+            var fieldNames = fileData.First();
+            var content = fileData.Skip(1).ToList();
+            foreach (var item in content)
+            {
+                var itemElement = new XElement(baseName);
+                itemElement.Add(new XElement("value"));
+                root.Add(new XElement(itemElement));
+            }
             document.Add(root);
             return document.ToString();
         }
