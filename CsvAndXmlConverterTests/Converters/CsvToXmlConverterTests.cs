@@ -128,7 +128,7 @@ namespace CsvAndXmlConverterTests.Converters
             mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new FileNotFoundException("not found"));
             var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
             var result = converter.ConvertFile(testFileName);
-            Assert.AreEqual(false, result.Result);
+            Assert.AreEqual(false, result.Completed);
             Assert.AreEqual(string.Format(Resources.FileNotFoundMessage, testFileName), result.ResultMessage);
         }
 
@@ -142,7 +142,7 @@ namespace CsvAndXmlConverterTests.Converters
             var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
             var result = converter.ConvertFile(testFileName);
             var expectedResult = string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(testFileName));
-            Assert.AreEqual(false, result.Result);
+            Assert.AreEqual(false, result.Completed);
             Assert.AreEqual(expectedResult, result.ResultMessage);
         }
 

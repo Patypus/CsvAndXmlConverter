@@ -8,7 +8,7 @@ namespace CsvAndXmlConverter.Data
 {
     public class ConversionResult : IConversionResult
     {
-        public bool Result { get; set; }
+        public bool Completed { get; set; }
 
         public string ResultMessage { get; set; }
     }

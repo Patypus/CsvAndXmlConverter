@@ -35,8 +35,9 @@ namespace CsvAndXmlConverter.Converters
             }
             
             var convertedFilePath = CreatePathForConvertedFile(path);
-            WriteDataToFile(convertDataContent(fileData, Path.GetFileNameWithoutExtension(path)), convertedFilePath);
-            return null;
+            var convertedData = convertDataContent(fileData, Path.GetFileNameWithoutExtension(path));
+            var result = WriteDataToFile(convertedData, convertedFilePath);
+            return new ConversionResult { Completed = true, ResultMessage = result };
         }
 
         private IConversionResult HandleExceptionFromReadingFile(Exception exception, string path)
@@ -44,17 +45,17 @@ namespace CsvAndXmlConverter.Converters
             if(exception.GetType() == typeof(FileNotFoundException))
             {
                 var message = string.Format(Resources.FileNotFoundMessage, path);
-                return new ConversionResult { Result = false, ResultMessage = message };
+                return new ConversionResult { Completed = false, ResultMessage = message };
             }
             else if (exception.GetType() == typeof(DirectoryNotFoundException))
             {
                 var message = string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(path));
-                return new ConversionResult { Result = false, ResultMessage = message };
+                return new ConversionResult { Completed = false, ResultMessage = message };
             }
             else
             {
                 var message = string.Format(Resources.GenericUnableToOpenFile, exception.Message);
-                return new ConversionResult { Result = false, ResultMessage = message };
+                return new ConversionResult { Completed = false, ResultMessage = message };
             }
         }
 
