@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CsvAndXmlConverterTests.Converters
 {
@@ -81,7 +82,25 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestEachRowIsRepresentedAsASeparateElement()
         {
-            Assert.IsTrue(false);
+            var testFileName = "testFile";
+            //setup mock writer
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestSteamContentForRowsAsElements(memoryStream, testFileName));
+            //setup mock reader
+            var mockReader = new Mock<IStandardFileReader>();
+            mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>()))
+                      .Returns(new[] { "col1,col2", "item1.1,item1.2", "item1.1,item1.2" });
+            var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
+            converter.ConvertFile(@"C:\Somewhere\else\" + testFileName + ".csv");
+        }
+
+        private void TestSteamContentForRowsAsElements(MemoryStream stream, string fileName)
+        {
+            var documentFromStream = XDocument.Load(stream);
+            var count = documentFromStream.Element(fileName + "s").Elements(fileName).Count();
+            Assert.AreEqual(2, count);
         }
 
         [TestMethod]
