@@ -127,7 +127,24 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestColumnValuesAreInCorrectElementTagsAfterConversion()
         {
-            Assert.IsTrue(false);
+            var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestValuesOfColumnElementsInStream(memoryStream));
+            var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
+            converter.ConvertFile(@"C:\Any\Old\file.txt");
+        }
+
+        private void TestValuesOfColumnElementsInStream(MemoryStream stream)
+        {
+            var documentFromStream = XDocument.Load(stream);
+            var rowElements = documentFromStream.Element("files").Descendants("file");
+            var col1Element = rowElements.Elements("col1");
+            var col2Element = rowElements.Elements("col2");
+            Assert.AreEqual(1, col1Element.Count(), col2Element.Count());
+            Assert.AreEqual("item1", col1Element.First().Value);
+            Assert.AreEqual("item2", col2Element.First().Value);
         }
 
         [TestMethod]

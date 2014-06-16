@@ -99,7 +99,7 @@ namespace CsvAndXmlConverter.Converters
                 var contentArray = item.Split(',');
                 foreach (var field in fieldNames)
                 {
-                    itemElement.Add(new XElement(field.Value, item[field.Key]));
+                    itemElement.Add(new XElement(field.Value, contentArray[field.Key]));
                 }
                 root.Add(new XElement(itemElement));
             }
