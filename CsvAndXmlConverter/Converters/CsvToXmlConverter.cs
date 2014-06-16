@@ -91,16 +91,26 @@ namespace CsvAndXmlConverter.Converters
         {
             var document = new XDocument();
             var root = new XElement(baseName + "s");
-            var fieldNames = fileData.First();
+            var fieldNames = CreateIndexAndFeildDictionaryFromColumnLineOfCsvContent(fileData.First());
             var content = fileData.Skip(1).ToList();
             foreach (var item in content)
             {
                 var itemElement = new XElement(baseName);
-                itemElement.Add(new XElement("value"));
+                var contentArray = item.Split(',');
+                foreach (var field in fieldNames)
+                {
+                    itemElement.Add(new XElement(field.Value, item[field.Key]));
+                }
                 root.Add(new XElement(itemElement));
             }
             document.Add(root);
             return document.ToString();
+        }
+
+        private IDictionary<int, string> CreateIndexAndFeildDictionaryFromColumnLineOfCsvContent(string columns)
+        {
+            var columnArray = columns.Split(',');
+            return columnArray.ToDictionary(item => Array.IndexOf(columnArray, item), item => item.ToString());
         }
     }
 }
