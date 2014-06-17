@@ -97,6 +97,15 @@ namespace CsvAndXmlConverter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No data found for conversion in file {0}.
+        /// </summary>
+        internal static string NotDataInFileToConvert {
+            get {
+                return ResourceManager.GetString("NotDataInFileToConvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to save to directory path {0} as permission has been denied.
         /// </summary>
         internal static string UnableToSaveFilePermissionDenied {

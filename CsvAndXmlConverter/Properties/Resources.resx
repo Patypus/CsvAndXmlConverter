@@ -129,6 +129,9 @@
   <data name="GenericUnableToOpenFile" xml:space="preserve">
     <value>Unable to open file: {0}</value>
   </data>
+  <data name="NotDataInFileToConvert" xml:space="preserve">
+    <value>No data found for conversion in file {0}</value>
+  </data>
   <data name="UnableToSaveFilePermissionDenied" xml:space="preserve">
     <value>Unable to save to directory path {0} as permission has been denied</value>
   </data>

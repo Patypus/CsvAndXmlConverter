@@ -150,13 +150,41 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestContentOfConvertedFileIsCorrect()
         {
-            Assert.IsTrue(false);
+            var fileName = "file";
+            var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestFullFileContentIsAsExpected(memoryStream, fileName));
+            var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
+            converter.ConvertFile(@"C:\Any\Old\" + fileName + ".txt");
+        }
+
+        private void TestFullFileContentIsAsExpected(MemoryStream stream, string filename)
+        {
+            var expected = "<" + filename + "s>" + Environment.NewLine +
+                           "  <" + filename + ">" + Environment.NewLine +
+                           "    <col1>item1</col1>" + Environment.NewLine +
+                           "    <col2>item2</col2>" + Environment.NewLine +
+                           "  </" + filename + ">" + Environment.NewLine +
+                           "</" + filename + "s>";
+            var reader = new StreamReader(stream);
+            var content = reader.ReadToEnd();
+            Assert.AreEqual(expected, content);
         }
 
         [TestMethod]
         public void TestCsvFileWithNoDataIsHandledProperly()
         {
-            Assert.IsTrue(false);
+            var path = @"C:\Pathto\anempty\file.csv";
+            var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
+            var mockReader = new Mock<IStandardFileReader>();
+            mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Returns(new string[0]);
+            var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
+            var result = converter.ConvertFile(path);
+            var expectedMessage = string.Format(Resources.NotDataInFileToConvert, path);
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(expectedMessage, result.ResultMessage);
         }
 
         [TestMethod]
@@ -179,7 +207,7 @@ namespace CsvAndXmlConverterTests.Converters
             mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new FileNotFoundException("not found"));
             var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
             var result = converter.ConvertFile(testFileName);
-            Assert.AreEqual(false, result.Completed);
+            Assert.AreEqual(false, result.Success);
             Assert.AreEqual(string.Format(Resources.FileNotFoundMessage, testFileName), result.ResultMessage);
         }
 
@@ -193,7 +221,7 @@ namespace CsvAndXmlConverterTests.Converters
             var converter = new CsvToXmlConverter(mockReader.Object, mockWriter.Object);
             var result = converter.ConvertFile(testFileName);
             var expectedResult = string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(testFileName));
-            Assert.AreEqual(false, result.Completed);
+            Assert.IsFalse(result.Success);
             Assert.AreEqual(expectedResult, result.ResultMessage);
         }
 

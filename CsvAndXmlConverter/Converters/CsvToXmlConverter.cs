@@ -33,11 +33,23 @@ namespace CsvAndXmlConverter.Converters
             {
                 return HandleExceptionFromReadingFile(exception, path);
             }
-            
+
+            return fileData.Count() > 0 ? PerformConversionOfFileData(fileData, path) :
+                                        CreateResultForEmptyFileContent(fileData, path);
+        }
+
+        private IConversionResult PerformConversionOfFileData(IEnumerable<string> fileData, string path)
+        {
             var convertedFilePath = CreatePathForConvertedFile(path);
             var convertedData = convertDataContent(fileData, Path.GetFileNameWithoutExtension(path));
             var result = WriteDataToFile(convertedData, convertedFilePath);
-            return new ConversionResult { Completed = true, ResultMessage = result };
+            return new ConversionResult { Success = true, ResultMessage = result };
+        }
+
+        private IConversionResult CreateResultForEmptyFileContent(IEnumerable<string> fileData, string path)
+        {
+            var message = string.Format(Resources.NotDataInFileToConvert, path);
+            return new ConversionResult { Success = false, ResultMessage = message };
         }
 
         private IConversionResult HandleExceptionFromReadingFile(Exception exception, string path)
@@ -45,17 +57,17 @@ namespace CsvAndXmlConverter.Converters
             if(exception.GetType() == typeof(FileNotFoundException))
             {
                 var message = string.Format(Resources.FileNotFoundMessage, path);
-                return new ConversionResult { Completed = false, ResultMessage = message };
+                return new ConversionResult { Success = false, ResultMessage = message };
             }
             else if (exception.GetType() == typeof(DirectoryNotFoundException))
             {
                 var message = string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(path));
-                return new ConversionResult { Completed = false, ResultMessage = message };
+                return new ConversionResult { Success = false, ResultMessage = message };
             }
             else
             {
                 var message = string.Format(Resources.GenericUnableToOpenFile, exception.Message);
-                return new ConversionResult { Completed = false, ResultMessage = message };
+                return new ConversionResult { Success = false, ResultMessage = message };
             }
         }
 
