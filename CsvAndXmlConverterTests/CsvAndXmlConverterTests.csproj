@@ -39,6 +39,9 @@
       <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -59,6 +62,7 @@
     <Compile Include="Converters\XmlToCsvConverterTests.cs" />
     <Compile Include="IO\FileWriterTests.cs" />
     <Compile Include="IO\StandardFileReaderTests.cs" />
+    <Compile Include="IO\XMLFileReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
