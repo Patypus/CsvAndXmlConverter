@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CsvAndXmlConverter.Converters;
+using CsvAndXmlConverter.Data;
+using CsvAndXmlConverter.IO;
+using CsvAndXmlConverter.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,19 +42,25 @@ namespace CsvAndXmlConverter
 
         private static void DetermineRequiredActionFromFileExtenstion(string path, string extension)
         {
+            IConversionResult result;
             if (extension == "csv")
             {
-                //csv to xml conversion
+                var converter = new CsvToXmlConverter(new StandardFileReader(), new FileWriter());
+                result = converter.ConvertFile(path);
             }
             else
             {
+                result = new ConversionResult();
                 //xml to csv conversion
             }
+            var completeStatusMessage = result.Success ? Resources.SuccessfulConversionMessage : Resources.FailedConvrsionMessage;
+            Console.WriteLine(completeStatusMessage);
+            Console.WriteLine(result.ResultMessage);
         }
 
         private static void ShowUsageMessage()
         {
-            Console.WriteLine();
+            Console.WriteLine(Resources.UsageMessage);
         }
     }
 }

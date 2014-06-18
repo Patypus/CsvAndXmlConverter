@@ -120,6 +120,9 @@
   <data name="DirectoryNotFoundMessage" xml:space="preserve">
     <value>Unable to find direcotry in the path '{0}'</value>
   </data>
+  <data name="FailedConvrsionMessage" xml:space="preserve">
+    <value>The conversion failed:</value>
+  </data>
   <data name="FileCreated" xml:space="preserve">
     <value>Converted file created at {0}</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="NotDataInFileToConvert" xml:space="preserve">
     <value>No data found for conversion in file {0}</value>
+  </data>
+  <data name="SuccessfulConversionMessage" xml:space="preserve">
+    <value>The conversion succeded:</value>
   </data>
   <data name="UnableToSaveFilePermissionDenied" xml:space="preserve">
     <value>Unable to save to directory path {0} as permission has been denied</value>

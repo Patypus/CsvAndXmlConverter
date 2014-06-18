@@ -70,6 +70,15 @@ namespace CsvAndXmlConverter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The conversion failed:.
+        /// </summary>
+        internal static string FailedConvrsionMessage {
+            get {
+                return ResourceManager.GetString("FailedConvrsionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converted file created at {0}.
         /// </summary>
         internal static string FileCreated {
@@ -102,6 +111,15 @@ namespace CsvAndXmlConverter.Properties {
         internal static string NotDataInFileToConvert {
             get {
                 return ResourceManager.GetString("NotDataInFileToConvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The conversion succeded:.
+        /// </summary>
+        internal static string SuccessfulConversionMessage {
+            get {
+                return ResourceManager.GetString("SuccessfulConversionMessage", resourceCulture);
             }
         }
         
