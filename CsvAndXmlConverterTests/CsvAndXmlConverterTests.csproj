@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IO\Data\TestTextFile.txt" />
+    <Content Include="IO\Data\TestXmlFile.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IO\WriteTarget\" />

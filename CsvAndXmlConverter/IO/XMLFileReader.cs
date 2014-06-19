@@ -11,7 +11,7 @@ namespace CsvAndXmlConverter.IO
     {
         public XDocument ReadDataFromFile(string path)
         {
-            throw new NotImplementedException();
+            return XDocument.Load(path);
         }
     }
 }
