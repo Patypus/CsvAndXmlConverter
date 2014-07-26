@@ -1,5 +1,6 @@
 ﻿using CsvAndXmlConverter.Converters;
 using CsvAndXmlConverter.IO;
+using CsvAndXmlConverter.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -112,13 +113,27 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestMissingFileErrorIsReportedByConverter()
         {
-            Assert.IsFalse(true);
+            var testFileName = @"C:\Somewhere\strange.csv";
+            var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
+            var mockReader = new Mock<IXMLFileReader>();
+            mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new FileNotFoundException("not found"));
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var result = converter.ConvertFile(testFileName);
+            Assert.AreEqual(false, result.Success);
+            Assert.AreEqual(string.Format(Resources.FileNotFoundMessage, testFileName), result.ResultMessage);
         }
 
         [TestMethod]
         public void TestMissingDirectoryErrorIsReportedByConverter()
         {
-            Assert.IsFalse(true);
+            var testFileName = @"C:\Somewhere\strange.csv";
+            var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
+            var mockReader = new Mock<IXMLFileReader>();
+            mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new DirectoryNotFoundException("not found"));
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var result = converter.ConvertFile(testFileName);
+            Assert.AreEqual(false, result.Success);
+            Assert.AreEqual(string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(testFileName)), result.ResultMessage);
         }
 
         private Mock<IFileWriter> CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage()

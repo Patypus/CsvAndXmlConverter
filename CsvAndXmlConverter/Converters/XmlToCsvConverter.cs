@@ -1,5 +1,6 @@
 ﻿using CsvAndXmlConverter.Data;
 using CsvAndXmlConverter.IO;
+using CsvAndXmlConverter.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,21 @@ namespace CsvAndXmlConverter.Converters
 
         public IConversionResult ConvertFile(string path)
         {
-            var documentToConvert = _reader.ReadDataFromFile(path);
+            XDocument documentToConvert;
+            try
+            {
+                documentToConvert = _reader.ReadDataFromFile(path);
+            }
+            catch(Exception exception)
+            {
+                return HandleExceptionFromReadingFile(exception, path);
+            }
+
+            return PerfromConversionForDataDocument(documentToConvert, path);
+        }
+
+        private IConversionResult PerfromConversionForDataDocument(XDocument documentToConvert, string path)
+        {
             var convertedContent = ConvertXmlContentToCSV(documentToConvert);
             var writeResult = WriteDataToFile(convertedContent, CreatePathForConvertedFile(path));
             return new ConversionResult { Success = true, ResultMessage = "success" };
@@ -45,6 +60,7 @@ namespace CsvAndXmlConverter.Converters
         {
             var resultBuilder = new StringBuilder();
             var singleItemElement = document.Root.Elements().First();
+            //TODO : Handle nothing being in elements here, or root being empty?
             var propertyElementTitles = singleItemElement.Elements().Select(element => element.Name.ToString());
             return string.Join(",", propertyElementTitles);
         }
@@ -69,6 +85,25 @@ namespace CsvAndXmlConverter.Converters
             var filePath = Path.GetDirectoryName(originalPath);
             var newFileName = "converted_" + Path.GetFileNameWithoutExtension(originalPath) + ".csv";
             return Path.Combine(filePath, newFileName);
+        }
+
+        private IConversionResult HandleExceptionFromReadingFile(Exception exception, string path)
+        {
+            if (exception.GetType() == typeof(FileNotFoundException))
+            {
+                var message = string.Format(Resources.FileNotFoundMessage, path);
+                return new ConversionResult { Success = false, ResultMessage = message };
+            }
+            else if (exception.GetType() == typeof(DirectoryNotFoundException))
+            {
+                var message = string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(path));
+                return new ConversionResult { Success = false, ResultMessage = message };
+            }
+            else
+            {
+                var message = string.Format(Resources.GenericUnableToOpenFile, exception.Message);
+                return new ConversionResult { Success = false, ResultMessage = message };
+            }
         }
     }
 }

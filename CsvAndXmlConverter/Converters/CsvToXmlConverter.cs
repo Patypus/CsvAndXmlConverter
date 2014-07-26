@@ -35,7 +35,7 @@ namespace CsvAndXmlConverter.Converters
             }
 
             return fileData.Count() > 0 ? PerformConversionOfFileData(fileData, path) :
-                                        CreateResultForEmptyFileContent(fileData, path);
+                                          CreateResultForEmptyFileContent(fileData, path);
         }
 
         private IConversionResult PerformConversionOfFileData(IEnumerable<string> fileData, string path)

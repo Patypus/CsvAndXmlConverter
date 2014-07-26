@@ -201,7 +201,7 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestMissingFileErrorIsReportedByConverter()
         {
-            var testFileName = @"C:\Somewhere\change.csv";
+            var testFileName = @"C:\Somewhere\strange.csv";
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
             var mockReader = new Mock<IStandardFileReader>();
             mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new FileNotFoundException("not found"));
@@ -214,7 +214,7 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestMissingDirectoryErrorIsReportedByConverter()
         {
-            var testFileName = @"C:\Somewhere\change.csv";
+            var testFileName = @"C:\Somewhere\strange.csv";
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
             var mockReader = new Mock<IStandardFileReader>();
             mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new DirectoryNotFoundException("not found"));
