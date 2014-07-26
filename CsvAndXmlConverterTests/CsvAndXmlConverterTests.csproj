@@ -72,6 +72,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Converters\XmlTestData\MulitpleProperty.xml" />
+    <Content Include="Converters\XmlTestData\MultipleChildren.xml" />
     <Content Include="IO\Data\TestTextFile.txt" />
     <Content Include="IO\Data\TestXmlFile.xml" />
   </ItemGroup>

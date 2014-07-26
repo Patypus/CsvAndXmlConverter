@@ -31,8 +31,22 @@ namespace CsvAndXmlConverter.Converters
 
         private string ConvertXmlContentToCSV(XDocument content)
         {
-            //TODO - add the conversion logic in here.
-            return content.ToString();
+            var resultBuilder = new StringBuilder();
+            resultBuilder.Append(CreateColumnTitlesRow(content));
+            var childElements = content.Root.Elements();
+            foreach (var element in childElements)
+            {
+                resultBuilder.Append(Environment.NewLine + "dummy");
+            }
+            return resultBuilder.ToString();
+        }
+
+        private string CreateColumnTitlesRow(XDocument document)
+        {
+            var resultBuilder = new StringBuilder();
+            var singleItemElement = document.Root.Elements().First();
+            var propertyElementTitles = singleItemElement.Elements().Select(element => element.Name.ToString());
+            return string.Join(",", propertyElementTitles);
         }
 
         private string WriteDataToFile(string data, string path)

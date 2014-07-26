@@ -20,7 +20,7 @@ namespace CsvAndXmlConverterTests.Converters
         {
             var path = @"C:\Test\This\path\isPassed\toTheReader.xml";
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
-            var mockReader = CreateFileReaderReturingBasicDummyXmlConent();
+            var mockReader = CreateFileReaderReturingDummyXmlConent(CreateBasicXMLStructure());
             var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
             converter.ConvertFile(path);
             mockReader.Verify(mock => mock.ReadDataFromFile(path), Times.Exactly(1));
@@ -30,7 +30,7 @@ namespace CsvAndXmlConverterTests.Converters
         public void TestConvertedFileIsPassedToFileWriterWithCorrectName()
         {
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
-            var mockReader = CreateFileReaderReturingBasicDummyXmlConent();
+            var mockReader = CreateFileReaderReturingDummyXmlConent(CreateBasicXMLStructure());
             var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
             converter.ConvertFile(@"C:\Location\file.xml");
             mockWriter.Verify(mock =>
@@ -40,13 +40,43 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestARowIsAddedForEachChildElementOfTheRootElement()
         {
-            Assert.IsFalse(true);
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MultipleChildren.xml"));
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestOutputCSVContainsRowForEachFirstLevelChild(memoryStream));
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            converter.ConvertFile(@"C:\Location\file.xml");
+        }
+
+        private void TestOutputCSVContainsRowForEachFirstLevelChild(MemoryStream convertedContent)
+        {
+            var reader = new StreamReader(convertedContent);
+            var content = reader.ReadToEnd().Split(new [] { Environment.NewLine }, StringSplitOptions.None);
+            var countWithoutTitleRow = content.Skip(1).Count();
+            Assert.AreEqual(5, countWithoutTitleRow);
         }
 
         [TestMethod]
         public void TestCommonElementTagsBecomeColumnTitles()
         {
-            Assert.IsFalse(true);
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestColumnTitlesMatchElementTagsFromXmlFile(memoryStream));
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            converter.ConvertFile(@"C:\Location\file.xml");
+        }
+
+        private void TestColumnTitlesMatchElementTagsFromXmlFile(MemoryStream convertedContent)
+        {
+            var reader = new StreamReader(convertedContent);
+            var content = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var titles = content.First();
+            var contains = titles.Contains("name") && titles.Contains("id") && titles.Contains("date");
+            Assert.IsTrue(contains);
+            Assert.AreEqual(3, titles.Split(',').Length);
         }
 
         [TestMethod]
@@ -98,9 +128,8 @@ namespace CsvAndXmlConverterTests.Converters
             return mockWriter;
         }
 
-        private Mock<IXMLFileReader> CreateFileReaderReturingBasicDummyXmlConent()
+        private Mock<IXMLFileReader> CreateFileReaderReturingDummyXmlConent(XDocument content)
         {
-            var content = CreateBasicXMLStructure();
             var reader = new Mock<IXMLFileReader>();
             reader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Returns(content);
             return reader;
@@ -126,6 +155,11 @@ namespace CsvAndXmlConverterTests.Converters
             element.Add(valueOne);
             element.Add(valueTwo);
             return element;
+        }
+
+        private XDocument LoadXmlDocument(string path)
+        {
+            return XDocument.Load(path);
         }
     }
 }
