@@ -154,8 +154,8 @@ namespace CsvAndXmlConverterTests.Converters
         {
             var document = new XDocument();
             var dummyDataRoot = new XElement("items");
-            var dummyItemOne = CreateBasicChildElement(1);
-            var dummyItemTwo = CreateBasicChildElement(2);
+            dummyDataRoot.Add(CreateBasicChildElement(1));
+            dummyDataRoot.Add(CreateBasicChildElement(2));
             document.Add(dummyDataRoot);
             return document;
         }
