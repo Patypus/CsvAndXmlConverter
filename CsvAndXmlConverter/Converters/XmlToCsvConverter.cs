@@ -41,7 +41,7 @@ namespace CsvAndXmlConverter.Converters
         {
             var convertedContent = ConvertXmlContentToCSV(documentToConvert);
             var writeResult = WriteDataToFile(convertedContent, CreatePathForConvertedFile(path));
-            return new ConversionResult { Success = true, ResultMessage = "success" };
+            return new ConversionResult { Success = true, ResultMessage = writeResult };
         }
 
         private string ConvertXmlContentToCSV(XDocument content)
@@ -51,9 +51,15 @@ namespace CsvAndXmlConverter.Converters
             var childElements = content.Root.Elements();
             foreach (var element in childElements)
             {
-                resultBuilder.Append(Environment.NewLine + "dummy");
+                resultBuilder.Append(Environment.NewLine + MakeRowFromValuesInElementCollection(element.Elements()));
             }
             return resultBuilder.ToString();
+        }
+
+        private string MakeRowFromValuesInElementCollection(IEnumerable<XElement> elements)
+        {
+            var elementValuesCollection = elements.Select(element => element.Value.ToString());
+            return string.Join(",", elementValuesCollection);
         }
 
         private string CreateColumnTitlesRow(XDocument document)

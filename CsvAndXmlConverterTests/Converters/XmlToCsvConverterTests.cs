@@ -83,7 +83,38 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestElementValuesAreInCorrectColumnsAfterConversion()
         {
-            Assert.IsFalse(true);
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestColumnValuesAreInCorrectColumnInCsvStream(memoryStream));
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            converter.ConvertFile(@"C:\Location\file.xml");
+        }
+
+        private void TestColumnValuesAreInCorrectColumnInCsvStream(MemoryStream csvStream)
+        {
+            var reader = new StreamReader(csvStream);
+            var content = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var firstItem = content[1].Split(',');
+            var secondItem = content[2].Split(',');
+            Assert.IsTrue(firstItem[0] == "Name value" && secondItem[0] == "Name 2 value");
+            Assert.IsTrue(firstItem[1] == "1" && secondItem[1] == "2");
+            Assert.IsTrue(firstItem[2] == "26/07/14" && secondItem[2] == "25/07/14");
+        }
+
+        [TestMethod]
+        public void TestSuccessIsReturnedFromConverterWhenConversionSucceds()
+        {
+            var successOfWriteMessage = "This idicates if the file write was successful";
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns(successOfWriteMessage);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var result = converter.ConvertFile(@"C:\Location\file.xml");
+            Assert.IsTrue(result.Success);
+            Assert.AreEqual(successOfWriteMessage, result.ResultMessage);
         }
 
         [TestMethod]
