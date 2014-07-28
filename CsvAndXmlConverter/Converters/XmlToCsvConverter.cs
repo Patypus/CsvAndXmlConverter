@@ -33,7 +33,9 @@ namespace CsvAndXmlConverter.Converters
             {
                 return HandleExceptionFromReadingFile(exception, path);
             }
-
+            //TODO - new xml validator to inject to test the validity of the xml.
+            // validator to do the validation unit tests for this class. Only report failures from here.
+            // XML equalent from test for empty file.
             return PerfromConversionForDataDocument(documentToConvert, path);
         }
 
@@ -66,7 +68,6 @@ namespace CsvAndXmlConverter.Converters
         {
             var resultBuilder = new StringBuilder();
             var singleItemElement = document.Root.Elements().First();
-            //TODO : Handle nothing being in elements here, or root being empty?
             var propertyElementTitles = singleItemElement.Elements().Select(element => element.Name.ToString());
             return string.Join(",", propertyElementTitles);
         }
