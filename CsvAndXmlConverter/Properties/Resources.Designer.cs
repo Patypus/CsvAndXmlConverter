@@ -149,5 +149,14 @@ namespace CsvAndXmlConverter.Properties {
                 return ResourceManager.GetString("UsageMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some validation errors were encountered:.
+        /// </summary>
+        internal static string ValidationErrorsEncountered {
+            get {
+                return ResourceManager.GetString("ValidationErrorsEncountered", resourceCulture);
+            }
+        }
     }
 }

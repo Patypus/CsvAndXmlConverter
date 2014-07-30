@@ -35,11 +35,5 @@ namespace CsvAndXmlConverterTests.Validator
         {
             Assert.IsFalse(true);
         }
-
-        [TestMethod]
-        public void TestDataItemWithNoChildElementsIsReportedAsAFailure()
-        {
-            Assert.IsFalse(true);
-        }
     }
 }

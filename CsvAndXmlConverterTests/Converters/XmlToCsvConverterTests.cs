@@ -110,7 +110,7 @@ namespace CsvAndXmlConverterTests.Converters
         }
 
         [TestMethod]
-        public void TestSuccessIsReturnedFromConverterWhenConversionSucceds()
+        public void TestSuccessIsReturnedFromConverterWhenConversionSucceeds()
         {
             var successOfWriteMessage = "This idicates if the file write was successful";
             var mockValidator = CreateDummyValidatorReturningSuccess();
@@ -127,19 +127,51 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestFullContentOfConvertedFileIsCorrect()
         {
-            Assert.IsFalse(true);
+            var mockValidator = CreateDummyValidatorReturningSuccess();
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("Success")
+                        .Callback((MemoryStream memoryStream, string s) => TestFullContentOfCsvFileIsAsExpected(memoryStream));
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
+            converter.ConvertFile(@"C:\Location\file.xml");
+        }
+
+        private void TestFullContentOfCsvFileIsAsExpected(MemoryStream csvStream)
+        {
+            var reader = new StreamReader(csvStream);
+            var content = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            Assert.AreEqual("name,id,date", content[0]);
+            Assert.AreEqual("Name value,1,26/07/14", content[1]);
+            Assert.AreEqual("Name 2 value,2,25/07/14", content[2]);
+            Assert.AreEqual(3, content.Length);
         }
 
         [TestMethod]
         public void TestConversionIsNotAttemptedAfterAValidationFailure()
         {
-            Assert.IsFalse(true);
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
+            var mockValidator = CreateDummyValidatorReturningFailure();
+            var mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
+                        .Returns("success");
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
+            converter.ConvertFile(@"C:\Location\file.xml");
+            mockWriter.Verify(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()), Times.Never);
         }
 
         [TestMethod]
         public void TestValidationFailureIsReportedByTheConverter()
         {
-            Assert.IsFalse(true);
+            var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
+            var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
+            var mockValidator = CreateDummyValidatorReturningFailure();
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
+            var result = converter.ConvertFile(@"C:\Location\file.xml");
+            var expectedMessage = Resources.ValidationErrorsEncountered + Environment.NewLine
+                                    + "I don't like the look of this xml";
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(expectedMessage, result.ResultMessage);
         }
 
         [TestMethod]
@@ -189,6 +221,15 @@ namespace CsvAndXmlConverterTests.Converters
             var mockValidator = new Mock<IXmlValidator>();
             mockValidator.Setup(mock => mock.ValidateXml(It.IsAny<XDocument>()))
                          .Returns(new Tuple<bool, string[]>(true, new string[]{}));
+            return mockValidator;
+        }
+
+        private Mock<IXmlValidator> CreateDummyValidatorReturningFailure()
+        {
+            var message = "I don't like the look of this xml";
+            var mockValidator = new Mock<IXmlValidator>();
+            mockValidator.Setup(mock => mock.ValidateXml(It.IsAny<XDocument>()))
+                         .Returns(new Tuple<bool, string[]>(false, new string[] { message }));
             return mockValidator;
         }
 

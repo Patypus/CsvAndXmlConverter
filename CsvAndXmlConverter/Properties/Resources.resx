@@ -147,4 +147,7 @@
   <data name="UsageMessage" xml:space="preserve">
     <value>This program is invoked with a single argument: a path to an existing file to change its data's format. Specify a csv file to convert it to xml or specify an xml file to convert it to a csv format. The converted file will be placed at the same location as the file specified with the same name but a different extension.</value>
   </data>
+  <data name="ValidationErrorsEncountered" xml:space="preserve">
+    <value>Some validation errors were encountered:</value>
+  </data>
 </root>

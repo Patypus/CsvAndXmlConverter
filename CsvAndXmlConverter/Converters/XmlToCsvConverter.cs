@@ -36,10 +36,26 @@ namespace CsvAndXmlConverter.Converters
             {
                 return HandleExceptionFromReadingFile(exception, path);
             }
-            //TODO - new xml validator to inject to test the validity of the xml.
-            // validator to do the validation unit tests for this class. Only report failures from here.
-            // XML equalent from test for empty file.
-            return PerfromConversionForDataDocument(documentToConvert, path);
+
+            var validationResult = _validator.ValidateXml(documentToConvert);
+
+            return validationResult.Item1 ?  PerfromConversionForDataDocument(documentToConvert, path) :
+                                             ReportValidationFailure(validationResult);
+        }
+
+        private IConversionResult ReportValidationFailure(Tuple<bool, string[]> validationResult)
+        {
+            return new ConversionResult 
+                       { 
+                           Success = validationResult.Item1, 
+                           ResultMessage = CreateSingleStringFromArrayOfValidationFailures(validationResult.Item2) 
+                       };
+        }
+
+        private string CreateSingleStringFromArrayOfValidationFailures(string[] failures)
+        {
+            var introMessage = Resources.ValidationErrorsEncountered + Environment.NewLine;
+            return introMessage + string.Join(Environment.NewLine, failures);
         }
 
         private IConversionResult PerfromConversionForDataDocument(XDocument documentToConvert, string path)

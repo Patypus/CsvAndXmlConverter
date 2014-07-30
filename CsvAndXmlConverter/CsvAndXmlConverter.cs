@@ -2,6 +2,7 @@
 using CsvAndXmlConverter.Data;
 using CsvAndXmlConverter.IO;
 using CsvAndXmlConverter.Properties;
+using CsvAndXmlConverter.Validator;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,8 +51,8 @@ namespace CsvAndXmlConverter
             }
             else
             {
-                result = new ConversionResult();
-                //xml to csv conversion
+                var convrter = new XmlToCsvConverter(new FileWriter(), new XMLFileReader(), new XmlValidator());
+                result = convrter.ConvertFile(path);
             }
             var completeStatusMessage = result.Success ? Resources.SuccessfulConversionMessage : Resources.FailedConvrsionMessage;
             Console.WriteLine(completeStatusMessage);
