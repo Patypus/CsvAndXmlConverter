@@ -1,6 +1,7 @@
 ﻿using CsvAndXmlConverter.Converters;
 using CsvAndXmlConverter.IO;
 using CsvAndXmlConverter.Properties;
+using CsvAndXmlConverter.Validator;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -20,9 +21,10 @@ namespace CsvAndXmlConverterTests.Converters
         public void TestCorrectFilePathIsRequestedToBeReadFromFileReaderByConverter()
         {
             var path = @"C:\Test\This\path\isPassed\toTheReader.xml";
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
             var mockReader = CreateFileReaderReturingDummyXmlConent(CreateBasicXMLStructure());
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             converter.ConvertFile(path);
             mockReader.Verify(mock => mock.ReadDataFromFile(path), Times.Exactly(1));
         }
@@ -30,9 +32,10 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestConvertedFileIsPassedToFileWriterWithCorrectName()
         {
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
             var mockReader = CreateFileReaderReturingDummyXmlConent(CreateBasicXMLStructure());
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             converter.ConvertFile(@"C:\Location\file.xml");
             mockWriter.Verify(mock =>
                 mock.SaveDataToFile(It.IsAny<MemoryStream>(), @"C:\Location\converted_file.csv"), Times.Exactly(1));
@@ -41,12 +44,13 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestARowIsAddedForEachChildElementOfTheRootElement()
         {
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MultipleChildren.xml"));
             var mockWriter = new Mock<IFileWriter>();
             mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
                         .Returns("Success")
                         .Callback((MemoryStream memoryStream, string s) => TestOutputCSVContainsRowForEachFirstLevelChild(memoryStream));
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             converter.ConvertFile(@"C:\Location\file.xml");
         }
 
@@ -61,12 +65,13 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestCommonElementTagsBecomeColumnTitles()
         {
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
             var mockWriter = new Mock<IFileWriter>();
             mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
                         .Returns("Success")
                         .Callback((MemoryStream memoryStream, string s) => TestColumnTitlesMatchElementTagsFromXmlFile(memoryStream));
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             converter.ConvertFile(@"C:\Location\file.xml");
         }
 
@@ -83,12 +88,13 @@ namespace CsvAndXmlConverterTests.Converters
         [TestMethod]
         public void TestElementValuesAreInCorrectColumnsAfterConversion()
         {
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
             var mockWriter = new Mock<IFileWriter>();
             mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
                         .Returns("Success")
                         .Callback((MemoryStream memoryStream, string s) => TestColumnValuesAreInCorrectColumnInCsvStream(memoryStream));
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             converter.ConvertFile(@"C:\Location\file.xml");
         }
 
@@ -107,11 +113,12 @@ namespace CsvAndXmlConverterTests.Converters
         public void TestSuccessIsReturnedFromConverterWhenConversionSucceds()
         {
             var successOfWriteMessage = "This idicates if the file write was successful";
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
             var mockWriter = new Mock<IFileWriter>();
             mockWriter.Setup(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()))
                         .Returns(successOfWriteMessage);
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             var result = converter.ConvertFile(@"C:\Location\file.xml");
             Assert.IsTrue(result.Success);
             Assert.AreEqual(successOfWriteMessage, result.ResultMessage);
@@ -124,19 +131,13 @@ namespace CsvAndXmlConverterTests.Converters
         }
 
         [TestMethod]
-        public void TestUnMatchingElemetIsHandledCorrectly()
+        public void TestConversionIsNotAttemptedAfterAValidationFailure()
         {
             Assert.IsFalse(true);
         }
 
         [TestMethod]
-        public void TestFileWithNoDataIsHandledCorrectly()
-        {
-            Assert.IsFalse(true);
-        }
-
-        [TestMethod]
-        public void TestFileWithNoChildTagsIsHandledCorrectly()
+        public void TestValidationFailureIsReportedByTheConverter()
         {
             Assert.IsFalse(true);
         }
@@ -145,10 +146,11 @@ namespace CsvAndXmlConverterTests.Converters
         public void TestMissingFileErrorIsReportedByConverter()
         {
             var testFileName = @"C:\Somewhere\strange.csv";
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
             var mockReader = new Mock<IXMLFileReader>();
             mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new FileNotFoundException("not found"));
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             var result = converter.ConvertFile(testFileName);
             Assert.AreEqual(false, result.Success);
             Assert.AreEqual(string.Format(Resources.FileNotFoundMessage, testFileName), result.ResultMessage);
@@ -158,10 +160,11 @@ namespace CsvAndXmlConverterTests.Converters
         public void TestMissingDirectoryErrorIsReportedByConverter()
         {
             var testFileName = @"C:\Somewhere\strange.csv";
+            var mockValidator = CreateDummyValidatorReturningSuccess();
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
             var mockReader = new Mock<IXMLFileReader>();
             mockReader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Throws(new DirectoryNotFoundException("not found"));
-            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object);
+            var converter = new XmlToCsvConverter(mockWriter.Object, mockReader.Object, mockValidator.Object);
             var result = converter.ConvertFile(testFileName);
             Assert.AreEqual(false, result.Success);
             Assert.AreEqual(string.Format(Resources.DirectoryNotFoundMessage, Path.GetPathRoot(testFileName)), result.ResultMessage);
@@ -179,6 +182,14 @@ namespace CsvAndXmlConverterTests.Converters
             var reader = new Mock<IXMLFileReader>();
             reader.Setup(mock => mock.ReadDataFromFile(It.IsAny<string>())).Returns(content);
             return reader;
+        }
+
+        private Mock<IXmlValidator> CreateDummyValidatorReturningSuccess()
+        {
+            var mockValidator = new Mock<IXmlValidator>();
+            mockValidator.Setup(mock => mock.ValidateXml(It.IsAny<XDocument>()))
+                         .Returns(new Tuple<bool, string[]>(true, new string[]{}));
+            return mockValidator;
         }
 
         private XDocument CreateBasicXMLStructure()

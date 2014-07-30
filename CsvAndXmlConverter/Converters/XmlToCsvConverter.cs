@@ -1,6 +1,7 @@
 ﻿using CsvAndXmlConverter.Data;
 using CsvAndXmlConverter.IO;
 using CsvAndXmlConverter.Properties;
+using CsvAndXmlConverter.Validator;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,11 +16,13 @@ namespace CsvAndXmlConverter.Converters
     {
         private readonly IFileWriter _writer;
         private readonly IXMLFileReader _reader;
+        private readonly IXmlValidator _validator;
 
-        public XmlToCsvConverter(IFileWriter writer, IXMLFileReader reader)
+        public XmlToCsvConverter(IFileWriter writer, IXMLFileReader reader, IXmlValidator validator)
         {
             _writer = writer;
             _reader = reader;
+            _validator = validator;
         }
 
         public IConversionResult ConvertFile(string path)

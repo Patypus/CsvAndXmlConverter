@@ -59,6 +59,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Validator\IXmlValidator.cs" />
+    <Compile Include="Validator\XmlValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
