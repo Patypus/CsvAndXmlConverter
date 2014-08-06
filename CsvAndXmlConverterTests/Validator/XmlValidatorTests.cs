@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CsvAndXmlConverter.Properties;
+using CsvAndXmlConverter.Validator;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -15,25 +17,40 @@ namespace CsvAndXmlConverterTests.Validator
         [TestMethod]
         public void TestValidXmlPassesValidation()
         {
-            Assert.IsFalse(true);
+            var validator = new XmlValidator();
+            var document = LoadXmlDocument(@"../../Validator/XmlTestData/ValidXmlFile.xml");
+            var result = validator.ValidateXml(document);
+            Assert.IsTrue(result.Item1);
+            Assert.AreEqual(0, result.Item2.Count());
         }
 
         [TestMethod]
-        public void TestXDocumentWithNoDataIsReportedAsAfailure()
+        public void TestXDocumentWithNoDataElementIsReportedAsAfailure()
         {
-            Assert.IsFalse(true);
-        }
-
-        [TestMethod]
-        public void TestDataItemWithNoChildElementsIsReportedAsAFailure()
-        {
-            Assert.IsFalse(true);
+            var validator = new XmlValidator();
+            var document = LoadXmlDocument(@"../../Validator/XmlTestData/NoData.xml");
+            var result = validator.ValidateXml(document);
+            Assert.IsFalse(result.Item1);
+            Assert.AreEqual(Resources.NoDataElementsInDocument, result.Item2.First());
         }
 
         [TestMethod]
         public void TestDataElementWithInconsistentChildElementsIsReportedAsAFailure()
         {
-            Assert.IsFalse(true);
+            var validator = new XmlValidator();
+            var document = LoadXmlDocument(@"../../Validator/XmlTestData/InconsistentChildElements.xml");
+            var expectedElement = string.Format(Resources.InconsistentElementsMessage,
+                                                "2",
+                                                "name",
+                                                "Wigan");
+            var result = validator.ValidateXml(document);
+            Assert.IsFalse(result.Item1);
+            Assert.AreEqual(expectedElement, result.Item2[0]);
+        }
+
+        private XDocument LoadXmlDocument(string path)
+        {
+            return XDocument.Load(path);
         }
     }
 }

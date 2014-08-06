@@ -77,6 +77,9 @@
     <Content Include="Converters\XmlTestData\MultipleChildren.xml" />
     <Content Include="IO\Data\TestTextFile.txt" />
     <Content Include="IO\Data\TestXmlFile.xml" />
+    <Content Include="Validator\XmlTestData\InconsistentChildElements.xml" />
+    <Content Include="Validator\XmlTestData\NoData.xml" />
+    <Content Include="Validator\XmlTestData\ValidXmlFile.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IO\WriteTarget\" />

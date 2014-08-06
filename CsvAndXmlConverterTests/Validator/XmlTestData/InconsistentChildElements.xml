@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<places>
+  <place>
+    <name>Grimsby</name>
+    <category>Town</category>
+    <population>87574 </population>
+  </place>
+  <place>
+    <name>Wigan</name>
+    <category>town</category>
+    <population>97,000</population>
+    <extraElement>Hello world</extraElement>
+  </place>
+  <place>
+    <name>Shefield</name>
+    <category>City</category>
+    <population>551,800</population>
+  </place>
+</places>

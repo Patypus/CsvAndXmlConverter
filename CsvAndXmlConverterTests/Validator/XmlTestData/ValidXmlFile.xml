@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<people>
+  <person>
+    <name>Urist McExample</name>
+    <age>23</age>
+    <dateOfBirth>17/04/91</dateOfBirth>
+    <petsName>Bert</petsName>
+  </person>
+  <person>
+    <name>Julius Ceaser</name>
+    <age>2114</age>
+    <dateOfBirth>15/05/00</dateOfBirth>
+    <petsName>Crassus</petsName>
+  </person>
+  <person>
+    <name>Napolean</name>
+    <age>354</age>
+    <dateOfBirth>15/08/69</dateOfBirth>
+    <petsName>Louis</petsName>
+  </person>
+</people>

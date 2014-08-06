@@ -106,6 +106,24 @@ namespace CsvAndXmlConverter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inconsistent elements in element number {0} with element {1} value {2}.
+        /// </summary>
+        internal static string InconsistentElementsMessage {
+            get {
+                return ResourceManager.GetString("InconsistentElementsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data elements were discovered in in xml file.
+        /// </summary>
+        internal static string NoDataElementsInDocument {
+            get {
+                return ResourceManager.GetString("NoDataElementsInDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No data found for conversion in file {0}.
         /// </summary>
         internal static string NotDataInFileToConvert {

@@ -132,6 +132,12 @@
   <data name="GenericUnableToOpenFile" xml:space="preserve">
     <value>Unable to open file: {0}</value>
   </data>
+  <data name="InconsistentElementsMessage" xml:space="preserve">
+    <value>Inconsistent elements in element number {0} with element {1} value {2}</value>
+  </data>
+  <data name="NoDataElementsInDocument" xml:space="preserve">
+    <value>No data elements were discovered in in xml file</value>
+  </data>
   <data name="NotDataInFileToConvert" xml:space="preserve">
     <value>No data found for conversion in file {0}</value>
   </data>
