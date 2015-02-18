@@ -1,5 +1,5 @@
 ﻿using CsvAndXmlConverter.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace CsvAndXmlConverterTests.IO
 {
-    [TestClass]
+    [TestFixture]
     public class StandardFileReaderTests
     {
         private static IStandardFileReader reader;
 
-        [ClassInitialize]
-        public static void Setup(TestContext context)
+        [TestFixtureSetUp]
+        public void Setup()
         {
             reader = new StandardFileReader();
         }
 
-        [TestMethod]
+        [Test]
         public void TestReaderReturnsContentFromValidFile()
         {
             var expectedContent = new[] { "I am test data.", "So am I.", "I am not. hehehe." };
@@ -37,7 +37,7 @@ namespace CsvAndXmlConverterTests.IO
          * specific error messages to the user. Any changes to StandardFileReader must
          * still satisfy these tests.
          */
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(FileNotFoundException))]
         public void TestIncorrectFileNameThrowsExpectedException()
         {
@@ -45,7 +45,7 @@ namespace CsvAndXmlConverterTests.IO
             reader.ReadDataFromFile(path);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(DirectoryNotFoundException))]
         public void TestInvalidPathThrowsExpectedException()
         {

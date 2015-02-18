@@ -2,8 +2,8 @@
 using CsvAndXmlConverter.IO;
 using CsvAndXmlConverter.Properties;
 using CsvAndXmlConverter.Validator;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +14,10 @@ using System.Xml.Linq;
 
 namespace CsvAndXmlConverterTests.Converters
 {
-    [TestClass]
+    [TestFixture]
     public class XmlToCsvConverterTests
     {
-        [TestMethod]
+        [Test]
         public void TestCorrectFilePathIsRequestedToBeReadFromFileReaderByConverter()
         {
             var path = @"C:\Test\This\path\isPassed\toTheReader.xml";
@@ -29,7 +29,7 @@ namespace CsvAndXmlConverterTests.Converters
             mockReader.Verify(mock => mock.ReadDataFromFile(path), Times.Exactly(1));
         }
 
-        [TestMethod]
+        [Test]
         public void TestConvertedFileIsPassedToFileWriterWithCorrectName()
         {
             var mockValidator = CreateDummyValidatorReturningSuccess();
@@ -41,7 +41,7 @@ namespace CsvAndXmlConverterTests.Converters
                 mock.SaveDataToFile(It.IsAny<MemoryStream>(), @"C:\Location\converted_file.csv"), Times.Exactly(1));
         }
 
-        [TestMethod]
+        [Test]
         public void TestARowIsAddedForEachChildElementOfTheRootElement()
         {
             var mockValidator = CreateDummyValidatorReturningSuccess();
@@ -62,7 +62,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(5, countWithoutTitleRow);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCommonElementTagsBecomeColumnTitles()
         {
             var mockValidator = CreateDummyValidatorReturningSuccess();
@@ -85,7 +85,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(3, titles.Split(',').Length);
         }
 
-        [TestMethod]
+        [Test]
         public void TestElementValuesAreInCorrectColumnsAfterConversion()
         {
             var mockValidator = CreateDummyValidatorReturningSuccess();
@@ -109,7 +109,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.IsTrue(firstItem[2] == "26/07/14" && secondItem[2] == "25/07/14");
         }
 
-        [TestMethod]
+        [Test]
         public void TestSuccessIsReturnedFromConverterWhenConversionSucceeds()
         {
             var successOfWriteMessage = "This idicates if the file write was successful";
@@ -124,7 +124,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(successOfWriteMessage, result.ResultMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFullContentOfConvertedFileIsCorrect()
         {
             var mockValidator = CreateDummyValidatorReturningSuccess();
@@ -147,7 +147,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(3, content.Length);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConversionIsNotAttemptedAfterAValidationFailure()
         {
             var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
@@ -160,7 +160,7 @@ namespace CsvAndXmlConverterTests.Converters
             mockWriter.Verify(mock => mock.SaveDataToFile(It.IsAny<MemoryStream>(), It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public void TestValidationFailureIsReportedByTheConverter()
         {
             var mockReader = CreateFileReaderReturingDummyXmlConent(LoadXmlDocument(@"../../Converters/XmlTestData/MulitpleProperty.xml"));
@@ -174,7 +174,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(expectedMessage, result.ResultMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMissingFileErrorIsReportedByConverter()
         {
             var testFileName = @"C:\Somewhere\strange.csv";
@@ -188,7 +188,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(string.Format(Resources.FileNotFoundMessage, testFileName), result.ResultMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMissingDirectoryErrorIsReportedByConverter()
         {
             var testFileName = @"C:\Somewhere\strange.csv";

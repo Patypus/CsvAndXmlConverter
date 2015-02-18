@@ -3,3 +3,4 @@ CsvAndXmlConverter/obj/*
 CsvAndXmlConverterTests/bin/*
 CsvAndXmlConverterTests/obj/*
 packages/*
+.nuget/*

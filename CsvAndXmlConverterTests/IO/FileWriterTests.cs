@@ -1,6 +1,6 @@
 ﻿using CsvAndXmlConverter.IO;
 using CsvAndXmlConverter.Properties;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace CsvAndXmlConverterTests.IO
 {
-    [TestClass]
+    [TestFixture]
     public class FileWriterTests
     {
         private static IFileWriter writer;
 
-        [ClassInitialize]
-        public static void Setup(TestContext context)
+        [TestFixtureSetUp]
+        public void Setup()
         {
             writer = new FileWriter();
         }
 
-        [TestMethod]
+        [Test]
         public void TestWritingDataToFileCreatesFile()
         {
             var content = CreateStreamForDataString("col1,col2,col3");
@@ -32,7 +32,7 @@ namespace CsvAndXmlConverterTests.IO
             Assert.IsTrue(exists);
         }
 
-        [TestMethod]
+        [Test]
         public void TestWritingDataFromStreamForCsv()
         {
             var csvData = "col1,col2,col3" + Environment.NewLine + "red,yellow,blue";
@@ -43,7 +43,7 @@ namespace CsvAndXmlConverterTests.IO
             Assert.AreEqual(csvData, dataStrngFromFile);
         }
 
-        [TestMethod]
+        [Test]
         public void TestWritingDataFromStreamForXml()
         {
             var xmlData = "<Items>" + Environment.NewLine +
@@ -56,7 +56,7 @@ namespace CsvAndXmlConverterTests.IO
             Assert.AreEqual(xmlData, dataStrngFromFile);
         }
 
-        [TestMethod]
+        [Test]
         public void TestReturnStatusForSuccessfulWriteIsCorrect()
         {
             var content = CreateStreamForDataString("col1,col2,col3");
@@ -68,7 +68,7 @@ namespace CsvAndXmlConverterTests.IO
             Assert.AreEqual(string.Format(Resources.FileCreated, filePath), stringResult);
         }
 
-        [TestMethod]
+        [Test]
         public void TestReturnStatusForWritingToDestingationWithNoPermissions()
         {
             var content = CreateStreamForDataString("col1,col2,col3");
@@ -78,7 +78,7 @@ namespace CsvAndXmlConverterTests.IO
             Assert.AreEqual(expectedString, stringResult);
         }
 
-        [TestMethod]
+        [Test]
         public void TestReturnStatusForWritingToNonExistantDestination()
         {
             var content = CreateStreamForDataString("col1,col2,col3");

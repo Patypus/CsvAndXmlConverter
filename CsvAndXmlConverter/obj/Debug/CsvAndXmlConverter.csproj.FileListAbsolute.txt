@@ -5,4 +5,3 @@ D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.Pr
 D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.csproj.GenerateResource.Cache
 D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.exe
 D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.pdb
-D:\Code\C#\CsvAndXmlConverter\CsvAndXmlConverter\obj\Debug\CsvAndXmlConverter.csprojResolveAssemblyReference.cache

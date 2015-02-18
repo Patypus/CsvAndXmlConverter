@@ -1,8 +1,8 @@
 ﻿using CsvAndXmlConverter.Converters;
 using CsvAndXmlConverter.IO;
 using CsvAndXmlConverter.Properties;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +13,10 @@ using System.Xml.Linq;
 
 namespace CsvAndXmlConverterTests.Converters
 {
-    [TestClass]
+    [TestFixture]
     public class CsvToXmlConverterTests
     {
-        [TestMethod]
+        [Test]
         public void TestCorrectFilePathIsRequestedToBeReadFromFileReaderByConverter()
         {
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
@@ -26,7 +26,7 @@ namespace CsvAndXmlConverterTests.Converters
             mockReader.Verify(mock => mock.ReadDataFromFile(@"C:\Somewhere\change.csv"), Times.Exactly(1));
         }
 
-        [TestMethod]
+        [Test]
         public void TestConvertedFileIsPassedToFileWriterWithCorrectName()
         {
             var mockWriter = CreateBasicFileWriterAcceptingAnyParametersAndReturningDummySuccessMessage();
@@ -37,7 +37,7 @@ namespace CsvAndXmlConverterTests.Converters
                 mock.SaveDataToFile(It.IsAny<MemoryStream>(), @"C:\Somewhere\converted_change.xml"), Times.Exactly(1));
         }
 
-        [TestMethod]
+        [Test]
         public void TestRootElementIsBasedOnFileName()
         {
             var expectedName = "change";
@@ -58,7 +58,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.IsTrue(content.Last().Contains("</" + expectedName + "s>"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestEachRecordsRootElementIsBasedOnFileName()
         {
             var expectedName = "element";
@@ -79,7 +79,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.IsTrue(content[content.Length - 2].Contains("</" + expectedName + ">"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestEachRowIsRepresentedAsASeparateElement()
         {
             var testFileName = "testFile";
@@ -103,7 +103,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(2, count);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnTitlesAreConvertedToElements()
         {
             var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
@@ -124,7 +124,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(2, rowElements.Descendants().Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnValuesAreInCorrectElementTagsAfterConversion()
         {
             var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
@@ -147,7 +147,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual("item2", col2Element.First().Value);
         }
 
-        [TestMethod]
+        [Test]
         public void TestContentOfConvertedFileIsCorrect()
         {
             var fileName = "file";
@@ -173,7 +173,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(expected, content);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCsvFileWithNoDataIsHandledProperly()
         {
             var path = @"C:\Pathto\anempty\file.csv";
@@ -187,7 +187,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(expectedMessage, result.ResultMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOutputMessageFromFileWriterIsPassedUpThoughConverterToCallerInResult()
         {
             var mockReader = CreateFileReaderAcceptingAllPathAndReturningDummyContent();
@@ -198,7 +198,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual("I am an error message", result.ResultMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMissingFileErrorIsReportedByConverter()
         {
             var testFileName = @"C:\Somewhere\strange.csv";
@@ -211,7 +211,7 @@ namespace CsvAndXmlConverterTests.Converters
             Assert.AreEqual(string.Format(Resources.FileNotFoundMessage, testFileName), result.ResultMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMissingDirectoryErrorIsReportedByConverter()
         {
             var testFileName = @"C:\Somewhere\strange.csv";

@@ -1,7 +1,7 @@
 ﻿using CsvAndXmlConverter.Properties;
 using CsvAndXmlConverter.Validator;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ using System.Xml.Linq;
 
 namespace CsvAndXmlConverterTests.Validator
 {
-    [TestClass]
+    [TestFixture]
     public class XmlValidatorTests
     {
-        [TestMethod]
+        [Test]
         public void TestValidXmlPassesValidation()
         {
             var validator = new XmlValidator();
@@ -24,7 +24,7 @@ namespace CsvAndXmlConverterTests.Validator
             Assert.AreEqual(0, result.Item2.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestXDocumentWithNoDataElementIsReportedAsAfailure()
         {
             var validator = new XmlValidator();
@@ -34,7 +34,7 @@ namespace CsvAndXmlConverterTests.Validator
             Assert.AreEqual(Resources.NoDataElementsInDocument, result.Item2.First());
         }
 
-        [TestMethod]
+        [Test]
         public void TestDataElementWithInconsistentChildElementsIsReportedAsAFailure()
         {
             var validator = new XmlValidator();
