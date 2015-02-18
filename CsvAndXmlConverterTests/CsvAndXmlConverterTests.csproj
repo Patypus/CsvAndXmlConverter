@@ -60,7 +60,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Converters\CsvToXmlConverterTests.cs" />
-    <Compile Include="Converters\TextFixture.cs" />
     <Compile Include="Converters\XmlToCsvConverterTests.cs" />
     <Compile Include="IO\FileWriterTests.cs" />
     <Compile Include="IO\StandardFileReaderTests.cs" />
